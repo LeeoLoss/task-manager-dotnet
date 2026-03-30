@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using TaskManager;
 namespace TaskManager
 {
@@ -33,30 +34,31 @@ namespace TaskManager
                     var description = Console.ReadLine();
 
                     Console.WriteLine("Inform the task priority (0 - Low, 1 - Medium, 2 - High):");
-                    var priority = int.Parse(Console.ReadLine());
+                    var priority = int.Parse(Console.ReadLine() ?? "0");
 
                     Console.WriteLine("Informe the task status (0 - Not Started, 1 - In Progress, 2 - Completed):");
-                    var status = int.Parse(Console.ReadLine());
+                    var status = int.Parse(Console.ReadLine() ?? "0");
 
+                    // 3.1 - Create a new task object with the provided details
+                    var priorityEnum = (TaskPriority)priority;
+                    var statusEnum = (TaskStatus)status;
                     var task = new TaskItem
                     {
-                        Id = service.GetTasks().Count + 1,
                         Title = title,
                         Description = description,
-                        Priority = priority,
-                        Status = status,
-                        IsCompleted = status == 2
+                        Priority = (TaskPriority)priority,
+                        Status = (TaskStatus)status,
                     };
 
                     Console.WriteLine("Please confirm the task details:");
                     Console.WriteLine($"Id: {task.Id}, Title: {task.Title}, Description: {task.Description}, Priority: {task.Priority}, Status: {task.Status}, IsCompleted: {task.IsCompleted}");
                     
-                    Console.WriteLine("Is the information correct? (y/n)");
+                    Console.WriteLine("Is the information correct? (Y/N)");
                     var confirmation = Console.ReadLine();
                     if (confirmation == "y")
                     {
                         service.AddTask(task);
-                        Console.WriteLine("Task added successfully!");
+                        Console.WriteLine($"Task '{task.Title}' added successfully with ID: {task.Id}!");
                     }
                     else
                     {
@@ -92,60 +94,63 @@ namespace TaskManager
                 // 5. - Implement the logic to edit or delete a task
                 case "3":
                 {
-                    Console.WriteLine("Please enter the task Id to edit or delete: ");
-                    var taskId = int.Parse(Console.ReadLine());
-                    var taskToEdit = service.GetTasks().FirstOrDefault(t => t.Id == taskId);
+                    Console.WriteLine("Please enter the task ID to edit or delete: ");
+                    
+                    var id = int.Parse(Console.ReadLine() ?? "0");
 
-                    if (taskToEdit == null)
-                    {
-                        Console.WriteLine("Task not found. Please try again.");
-                        Console.WriteLine("Press any key to continue...");
-                        Console.ReadKey();
-                        break;
-                    }
+                    Console.WriteLine("Do you want to edit (E) or delete (D) the task?");
+                    var action = Console.ReadLine();    
 
-                    if (taskToEdit != null)
-                        {                        
-                            Console.WriteLine("Please select an option:");
-                            Console.WriteLine("1. Edit the task");
-                            Console.WriteLine("2. Delete the task");
-                            var editOption = Console.ReadLine();
-                            
-                            if (editOption == "1")
+                    if (action == "E")
                             {
-                                Console.WriteLine("Please enter the new task title:");
-                                var newTitle = Console.ReadLine();
+                                Console.WriteLine("Please enter the new task title:");   
+                                var title = Console.ReadLine();
 
                                 Console.WriteLine("Please enter the new task description:");
-                                var newDescription = Console.ReadLine();
+                                var description = Console.ReadLine();
 
                                 Console.WriteLine("Inform the new task priority (0 - Low, 1 - Medium, 2 - High):");
-                                var newPriority = int.Parse(Console.ReadLine());
+                                var priority = int.Parse(Console.ReadLine() ?? "0");
 
-                                Console.WriteLine("Informe the new task status (0 - Not Started, 1 - In Progress, 2 - Completed):");
-                                var newStatus = int.Parse(Console.ReadLine());
+                                Console.WriteLine("Inform the new task status (0 - Not Started, 1 - In Progress, 2 - Completed):");
+                                var status = int.Parse(Console.ReadLine() ?? "0");                                
 
-                                taskToEdit.Title = newTitle;
-                                taskToEdit.Description = newDescription;
-                                taskToEdit.Priority = newPriority;
-                                taskToEdit.Status = newStatus;
-                                taskToEdit.IsCompleted = newStatus == 2;
+                                // 5.1 - Create an updated task object with the new details
+                                var priorityEnum = (TaskPriority)priority;
+                                var statusEnum = (TaskStatus)status;
+                                var updatedTask = new TaskItem
+                                {
+                                    Title = title,
+                                    Description = description,
+                                    Priority = (TaskPriority)priority,
+                                    Status = (TaskStatus)status,
+                                };
+                                var success = service.UpdateTask(id, updatedTask);
+                                if (success)                                {
+                                    Console.WriteLine($"Task with ID {id} updated successfully!");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Task with ID {id} not found.");
+                                }
 
-                                Console.WriteLine("Task updated successfully!");
                             }
-                            else if (editOption == "2")
+                            else if (action == "D")
                             {
-                                service.GetTasks().Remove(taskToEdit);
-                                Console.WriteLine("Task deleted successfully!");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid option. Please try again.");
-                            }
-                        }
+                                var success = service.DeleteTask(id);
+                                if (success)
+                                {
+                                    Console.WriteLine($"Task with ID {id} deleted successfully!");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Task with ID {id} not found.");
 
-                        Console.WriteLine("Press any key to continue...");
-                        Console.ReadKey();
+                                }
+                            }
+
+                            Console.WriteLine("Press any key to continue...");
+                            Console.ReadKey();
                 break;
                 }
 
