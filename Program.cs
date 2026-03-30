@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Identity.Client;
 using TaskManager;
 namespace TaskManager
 {
@@ -51,8 +52,8 @@ namespace TaskManager
                     };
 
                     Console.WriteLine("Please confirm the task details:");
-                    Console.WriteLine($"Id: {task.Id}, Title: {task.Title}, Description: {task.Description}, Priority: {task.Priority}, Status: {task.Status}, IsCompleted: {task.IsCompleted}");
-                    
+                    Console.WriteLine($"Title: {task.Title}, Description: {task.Description}, Priority: {task.Priority}, Status: {task.Status}, IsCompleted: {task.IsCompleted}");
+                        
                     Console.WriteLine("Is the information correct? (Y/N)");
                     var confirmation = Console.ReadLine();
                     if (confirmation == "y")
@@ -95,25 +96,30 @@ namespace TaskManager
                 case "3":
                 {
                     Console.WriteLine("Please enter the task ID to edit or delete: ");
-                    
-                    var id = int.Parse(Console.ReadLine() ?? "0");
+                    if (!int.TryParse(Console.ReadLine(), out var id))
+                    {
+                        Console.WriteLine("Invalid ID. Please enter a valid number.");
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
+                    }
 
                     Console.WriteLine("Do you want to edit (E) or delete (D) the task?");
-                    var action = Console.ReadLine();    
+                    var action = Console.ReadLine()?.ToUpper();    
 
                     if (action == "E")
                             {
                                 Console.WriteLine("Please enter the new task title:");   
-                                var title = Console.ReadLine();
+                                var title = Console.ReadLine() ?? "Untitled Task";
 
                                 Console.WriteLine("Please enter the new task description:");
                                 var description = Console.ReadLine();
 
                                 Console.WriteLine("Inform the new task priority (0 - Low, 1 - Medium, 2 - High):");
-                                var priority = int.Parse(Console.ReadLine() ?? "0");
+                                int.TryParse(Console.ReadLine(), out var priority);
 
                                 Console.WriteLine("Inform the new task status (0 - Not Started, 1 - In Progress, 2 - Completed):");
-                                var status = int.Parse(Console.ReadLine() ?? "0");                                
+                                int.TryParse(Console.ReadLine(), out var status);
 
                                 // 5.1 - Create an updated task object with the new details
                                 var priorityEnum = (TaskPriority)priority;
@@ -145,8 +151,11 @@ namespace TaskManager
                                 else
                                 {
                                     Console.WriteLine($"Task with ID {id} not found.");
-
                                 }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid action. Please enter 'E' to edit or 'D' to delete.");
                             }
 
                             Console.WriteLine("Press any key to continue...");
@@ -170,6 +179,3 @@ namespace TaskManager
     }
     }
 }  
-
-
-
