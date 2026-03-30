@@ -12,3 +12,4 @@
 /Users/leoloss/TaskManager/obj/Debug/net10.0/TaskItem.pdb
 /Users/leoloss/TaskManager/obj/Debug/net10.0/TaskItem.genruntimeconfig.cache
 /Users/leoloss/TaskManager/obj/Debug/net10.0/ref/TaskItem.dll
+/Users/leoloss/TaskManager/obj/Debug/net10.0/TaskItem.sourcelink.json
