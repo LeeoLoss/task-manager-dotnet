@@ -2,12 +2,12 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace TaskManager
+namespace TaskManager;
 
-{
+
     // 1. - Create enums for task priority and status
     public enum TaskPriority
-    {
+    {   
         Low,
         Medium,
         High
@@ -30,4 +30,3 @@ namespace TaskManager
         public TaskStatus Status { get; set; }
         public bool IsCompleted => Status == TaskStatus.Completed;
     }
-}
