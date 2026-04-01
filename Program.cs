@@ -8,7 +8,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSqlConnection"), 
     sqlOptions => 
     {
-        // Aqui colocamos a inteligência de reconexão que você tinha antes
+        // Enable retry on failure for transient faults
         sqlOptions.EnableRetryOnFailure(
             maxRetryCount: 5, 
             maxRetryDelay: TimeSpan.FromSeconds(30), 
