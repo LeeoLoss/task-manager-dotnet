@@ -1,32 +1,37 @@
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskManager;
 
+// 1. Enums definidos aqui para o C# encontrar
+public enum TaskPriority
+{   
+    Low,
+    Medium,
+    High
+}
 
-    // 1. - Create enums for task priority and status
-    public enum TaskPriority
-    {   
-        Low,
-        Medium,
-        High
-    }
+public enum TaskStatus
+{
+    NotStarted,
+    InProgress,
+    Completed
+}
 
-    public enum TaskStatus
-    {
-        NotStarted,
-        InProgress,
-        Completed
-    }
-    // 2. - Create a class to represent a task (TaskItem)
-    public class TaskItem
-    {
-        [Key]
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public TaskPriority Priority { get; set; }
-        public TaskStatus Status { get; set; }
-        public bool IsCompleted => Status == TaskStatus.Completed;
-    }
+// 2. A Classe TaskItem
+public class TaskItem
+{
+    [Key]
+    public int Id { get; set; }
+    
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    
+    public TaskPriority Priority { get; set; }
+    
+    public TaskStatus Status { get; set; }
+
+    [NotMapped]
+    public bool IsCompleted => this.Status == (TaskStatus)2;
+    
+}

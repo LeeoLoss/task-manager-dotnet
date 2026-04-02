@@ -5,10 +5,11 @@ namespace TaskManager;
 
 public class AppDbContext : DbContext
 {
-    // O construtor recebe as configurações que vêm lá do Program.cs
+    // 1.- Create a DbContext class to manage database operations
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 
+    // 2. - Create a DbSet for the TaskItem class
     public DbSet<TaskItem> Tasks { get; set; }
 }

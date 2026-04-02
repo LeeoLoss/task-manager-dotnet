@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  // 1. - Set the target framework to .NET 10.0 and enable nullable reference types and implicit usings
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework> <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  // 2. - Add necessary NuGet packages for Entity Framework Core and Swagger
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.*" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" /> </ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+  </ItemGroup>
 
-  // 3. -Copy appsettings.json to output directory
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -23,7 +23,11 @@ var app = builder.Build();
 
 // 3. - Activate Swagger
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => 
+    {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+    c.RoutePrefix = string.Empty; 
+    });
 
 // --- API Routes ---
 
@@ -34,6 +38,7 @@ app.MapGet("/tasks", async (AppDbContext db) =>
 // 5. - Get a single task by ID
 app.MapPost("/tasks", async (TaskManager.TaskItem task, AppDbContext db) =>
 {
+    task.Id = 0; 
     db.Tasks.Add(task);
     await db.SaveChangesAsync();
     return Results.Created($"/tasks/{task.Id}", task);

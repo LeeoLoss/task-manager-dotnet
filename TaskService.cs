@@ -7,23 +7,28 @@ namespace TaskManager
 {
     public class TaskService
     {
-        // 1. - Create a class to manage the tasks (TaskService)
-        private readonly AppDbContext _db = new AppDbContext();
-        
-        // 2. - Create a method to add a new task
+        // 1. - Dependency Injection of DbContext
+        private readonly AppDbContext _db;
+
+        // 2. - Constructor
+        public TaskService(AppDbContext db)
+        {
+            _db = db;
+        }
+
+        // 3. - CRUD operations   
         public void AddTask(TaskItem task)
         {
             _db.Tasks.Add(task);
             _db.SaveChanges();
         }
 
-        // 3. - Create a method to retrieve the list of tasks
+        // 4. - Retrieve tasks
         public List<TaskItem> GetTasks()
         {
             return _db.Tasks.ToList();
         }
 
-        // 4. - Create a method to update an existing task
         public bool UpdateTask(int id, TaskItem updatedTask)
         {
             var task = _db.Tasks.Find(id);
@@ -36,22 +41,16 @@ namespace TaskManager
             _db.SaveChanges();
             return true;
         }
-        // 5. - Create a method to delete a task from the list
+
+        // 5. - Delete task
         public bool DeleteTask(int id)
         {
             var task = _db.Tasks.Find(id);
-            if (task == null)
-            {
-                return false;
-            }
-            else
-            {
-                _db.Tasks.Remove(task);
-                _db.SaveChanges();
-                return true;
-            }
+            if (task == null) return false;
+
+            _db.Tasks.Remove(task);
+            _db.SaveChanges();
+            return true;
         }
     }
 }
-
-
